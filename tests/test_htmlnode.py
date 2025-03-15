@@ -56,18 +56,18 @@ class TestHTMLNode(unittest.TestCase):
 class TestLeafNode(unittest.TestCase):
     def test_tag(self) -> None:
         tag = "b"
-        node = LeafNode(value="", tag=tag)
+        node = LeafNode(tag=tag, value="")
         self.assertIsInstance(node.tag, str)
         self.assertEqual(node.tag, tag)
 
     def test_value(self) -> None:
         value = "test"
-        node = LeafNode(value=value)
+        node = LeafNode(tag="", value=value)
         self.assertIsInstance(node.value, str)
         self.assertEqual(node.value, value)
 
     def test_children(self) -> None:
-        node = LeafNode(value="")
+        node = LeafNode(tag="", value="")
         self.assertIsInstance(node.children, NoneType)
         self.assertEqual(node.children, None)
 
@@ -76,7 +76,7 @@ class TestLeafNode(unittest.TestCase):
             "href": "https://www.google.com",
             "target": "_blank",
         }
-        node = LeafNode(value="", props=props)
+        node = LeafNode(tag="", value="", props=props)
         self.assertIsInstance(node.props, dict)
         self.assertEqual(node.props, props)
 
@@ -86,6 +86,6 @@ class TestLeafNode(unittest.TestCase):
 
     def test_props_to_html(self) -> None:
         props = {"href": "https://www.google.com", "target": "_blank"}
-        html = LeafNode(value="", props=props).props_to_html()
+        html = LeafNode(tag="", value="", props=props).props_to_html()
         self.assertIsInstance(html, str)
         self.assertEqual(html, f'href="{props["href"]}" target="{props["target"]}"')
