@@ -43,7 +43,7 @@ class TestHTMLNode(unittest.TestCase):
         self.assertEqual(node.children, children)
 
     def test_props(self) -> None:
-        props = props = {
+        props = {
             "href": "https://www.google.com",
             "target": "_blank",
         }
