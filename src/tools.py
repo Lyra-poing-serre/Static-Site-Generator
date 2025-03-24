@@ -59,21 +59,20 @@ def split_nodes_image(old_nodes):
         matches = extract_markdown_images(old_node.text)
         if not matches:
             new_nodes.append(old_node)
+            continue
 
-        split_nodes = []
+        #split_nodes = []
+        idx_match = 0
+        old_text = old_node.text
         for image_alt, image_link in matches:
-            sections = old_node.text.split(f"![{image_alt}]({image_link})", 1)
-            if len(matches) == 1:
-                new_nodes.append(TextNode(sections[0], TextType.TEXT))
-                new_nodes.append(TextNode(image_alt, TextType.IMAGE, image_link))
-                new_nodes.append(TextNode(sections[-1], TextType.TEXT))
-            for i in range(len(sections)):
-                if i % 2 == 0:
-                    split_nodes.append(TextNode(sections[i], TextType.TEXT))
-                else:
-                    split_nodes.append(TextNode(sections[i], TextType.IMAGE))
+            old_text = old_text.replace(f"![{image_alt}]({image_link})", '|||||')
         
-        for node in split_nodes: # supression du match précédent ou suivant qui été pas dans le split.
-            if not extract_markdown_images(node.text):
-                new_nodes.append(node)
+        
+        for idx, text in enumerate(old_text.split('|||||', 1)):
+            if idx % 2 == 0:
+                new_nodes.append(TextNode(text, TextType.TEXT))
+            else:
+                new_nodes.append(TextNode(matches[idx_match][0], TextType.IMAGE, matches[idx_match][-1]))
+                idx_match += 1
+
     return new_nodes
