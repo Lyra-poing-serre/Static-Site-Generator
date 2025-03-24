@@ -1,7 +1,7 @@
 import unittest
 from src.textnode import TextType, TextNode
 from src.htmlnode import LeafNode
-from src.tools import text_node_to_html_node, split_nodes_delimiter
+from src.tools import extract_markdown_images, extract_markdown_links, text_node_to_html_node, split_nodes_delimiter
 from collections import OrderedDict
 
 
@@ -126,3 +126,28 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             new_nodes,
         )
+
+
+class TestExtractMarkdown(unittest.TestCase):
+    def test_extract_markdown_without_markdown(self):
+        matches = extract_markdown_images(
+            "This is text"
+        )
+        self.assertEqual([], matches)
+        matches = extract_markdown_links(
+            "This is text"
+        )
+        self.assertEqual([], matches)
+
+    
+    def test_extract_markdown_images(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+    
+    def test_extract_markdown_link(self):
+        matches = extract_markdown_links(
+            "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        )
+        self.assertListEqual([("to boot dev", "https://www.boot.dev"), ("to youtube", "https://www.youtube.com/@bootdotdev")], matches)
