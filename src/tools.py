@@ -69,13 +69,17 @@ def split_nodes_from_type(target_type: TextType):
                 continue
             matches = type_func(old_node.text)
             if not matches:
+                if old_node.text == '':
+                    continue
                 new_nodes.append(old_node)
                 continue
 
             old_text = old_node.text
             for alt, link in matches:
                 res = old_text.split(split_value.format(alt, link), 1)
-                new_nodes.append(TextNode(res.pop(0), TextType.TEXT))
+                text = res.pop(0)
+                if text != '':
+                    new_nodes.append(TextNode(text, TextType.TEXT))
                 new_nodes.append(TextNode(alt, target_type, link))
                 old_text = res.pop()
             if old_text != '':
@@ -84,3 +88,11 @@ def split_nodes_from_type(target_type: TextType):
         return new_nodes
 
     return split_node
+
+
+def split_nodes_image(old_nodes):
+    return split_nodes_from_type(TextType.IMAGE)(old_nodes)
+
+
+def split_nodes_link(old_nodes):
+    return split_nodes_from_type(TextType.LINK)(old_nodes)

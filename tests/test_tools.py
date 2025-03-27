@@ -152,8 +152,6 @@ class TestExtractMarkdown(unittest.TestCase):
 
 class TestSplitNodes(unittest.TestCase):
     def test_split_text(self):
-        split_nodes_image = split_nodes_from_type(TextType.IMAGE)
-        split_nodes_link = split_nodes_from_type(TextType.LINK)
         node = TextNode(
             "This is text.",
             TextType.TEXT,
@@ -169,8 +167,23 @@ class TestSplitNodes(unittest.TestCase):
             new_nodes,
         )
 
+    def test_split_empty_text(self):
+        node = TextNode(
+            "",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [],
+            new_nodes,
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [],
+            new_nodes,
+        )
+
     def test_split_images(self):
-        split_nodes_image = split_nodes_from_type(TextType.IMAGE)
         node = TextNode(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
             TextType.TEXT,
@@ -187,7 +200,6 @@ class TestSplitNodes(unittest.TestCase):
         )
 
     def test_split_links(self):
-        split_nodes_link = split_nodes_from_type(TextType.LINK)
         node = TextNode(
             "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
             TextType.TEXT,
@@ -204,7 +216,6 @@ class TestSplitNodes(unittest.TestCase):
         )
 
     def test_split_images_and_links(self):
-        split_nodes_link = split_nodes_from_type(TextType.LINK)
         node = TextNode(
             "This is text with a link [to boot dev](https://www.boot.dev) with golang logo ![golang image](https://i.imgur.com/3elNhQu.png)",
             TextType.TEXT,
@@ -218,7 +229,6 @@ class TestSplitNodes(unittest.TestCase):
             ],
             new_nodes,
         )
-        split_nodes_image = split_nodes_from_type(TextType.IMAGE)
         new_nodes = split_nodes_image(new_nodes)
         self.assertListEqual(
             [
