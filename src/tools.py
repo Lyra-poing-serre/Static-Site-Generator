@@ -50,29 +50,37 @@ def extract_markdown_links(text):
     return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
 
 
-def split_nodes_image(old_nodes):
-    new_nodes = []
-    for old_node in old_nodes:
-        if old_node.text_type != TextType.TEXT:
-            new_nodes.append(old_node)
-            continue
-        matches = extract_markdown_images(old_node.text)
-        if not matches:
-            new_nodes.append(old_node)
-            continue
+def split_nodes_from_type(target_type: TextType):
+    match target_type:
+        case TextType.IMAGE:
+            type_func = extract_markdown_images
+            split_value = "![{}]({})"
+        case TextType.LINK:
+            type_func = extract_markdown_links
+            split_value = "[{}]({})"
+        case _:
+            raise NotImplementedError('Invalid type')
 
-        #split_nodes = []
-        idx_match = 0
-        old_text = old_node.text
-        for image_alt, image_link in matches:
-            old_text = old_text.replace(f"![{image_alt}]({image_link})", '|||||')
-        
-        
-        for idx, text in enumerate(old_text.split('|||||', 1)):
-            if idx % 2 == 0:
-                new_nodes.append(TextNode(text, TextType.TEXT))
-            else:
-                new_nodes.append(TextNode(matches[idx_match][0], TextType.IMAGE, matches[idx_match][-1]))
-                idx_match += 1
+    def split_node(old_nodes: list) -> list:
+        new_nodes = []
+        for old_node in old_nodes:
+            if old_node.text_type != TextType.TEXT:
+                new_nodes.append(old_node)
+                continue
+            matches = type_func(old_node.text)
+            if not matches:
+                new_nodes.append(old_node)
+                continue
 
-    return new_nodes
+            old_text = old_node.text
+            for alt, link in matches:
+                res = old_text.split(split_value.format(alt, link), 1)
+                new_nodes.append(TextNode(res.pop(0), TextType.TEXT))
+                new_nodes.append(TextNode(alt, target_type, link))
+                old_text = res.pop()
+            if old_text != '':
+                new_nodes.append(TextNode(old_text, TextType.TEXT))
+
+        return new_nodes
+
+    return split_node
