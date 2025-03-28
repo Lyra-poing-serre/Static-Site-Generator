@@ -1,6 +1,9 @@
 import re
 from enum import Enum
 
+from .htmlnode import ParentNode, LeafNode, HTMLNode
+from .tools import text_to_textnodes, text_node_to_html_node
+
 
 class BlockType(Enum):
     PARAGRAPH = "paragraph"
@@ -15,7 +18,10 @@ def markdown_to_blocks(markdown: str) -> list:
     if not isinstance(markdown, str):
         raise TypeError('Invalid type.')
     blocks = list(map(str.strip, markdown.split('\n\n')))
-    return ["\n".join(list(map(str.strip, block.split('\n')))) for block in blocks]  # REMOVE trailing whitespace
+    return [
+        "\n".join(list(map(str.strip, block.split('\n'))))
+        for block in blocks if block.strip()  # remove "" block
+    ]  # REMOVE trailing whitespace
 
 
 def block_to_block_type(block: str) -> BlockType:
@@ -30,3 +36,55 @@ def block_to_block_type(block: str) -> BlockType:
     elif block.startswith('1. '):
         return BlockType.ORDERED_LIST
     return BlockType.PARAGRAPH
+
+
+def markdown_block_to_html_node(md_block: str, md_type: BlockType) -> HTMLNode:
+    match md_type:
+        case BlockType.PARAGRAPH:
+            return ParentNode('p', children=children_to_html_node(md_block))
+        case BlockType.HEADING:
+            heading_level = min(len(md_block.split(' ')[0]), 6)  # Count the `#` before the first space
+            heading_text = md_block.lstrip('#').strip()  # Remove leading `#` and trim spaces
+            return ParentNode("h{}".format(heading_level), children=children_to_html_node(heading_text))
+        case BlockType.CODE:
+            return ParentNode("pre", children=[LeafNode('code', md_block.lstrip('```').rstrip('```').lstrip())])
+        case BlockType.QUOTE:
+            return ParentNode('blockquote', children=children_to_html_node(md_block.lstrip('>').strip()))
+        case BlockType.UNORDERED_LIST:
+            return ParentNode(
+                "ul",
+                children=[
+                    ParentNode('li', children=children_to_html_node(child.strip()))
+                    for child in md_block.split('- ') if child.strip()
+                ]
+            )
+        case BlockType.ORDERED_LIST:
+            return ParentNode(
+                "ol",
+                children=[
+                    ParentNode('li', children=children_to_html_node(child.strip()))
+                    for child in re.split(r'\d+\.\s', md_block) if child.strip()
+                ]
+            )
+        case _:
+            raise Exception("Invalid BlockType.")
+
+
+def markdown_to_html_node(markdown: str) -> ParentNode:
+    blocks = markdown_to_blocks(markdown)
+    return ParentNode(
+        'div',
+        list(
+            markdown_block_to_html_node(
+                block, block_to_block_type(block)
+            )
+            for block in blocks
+        )
+    )
+
+
+def children_to_html_node(markdown_children: str) -> list:
+    nodes = text_to_textnodes(markdown_children)
+    return list(map(text_node_to_html_node, nodes))
+
+

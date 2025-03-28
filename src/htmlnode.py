@@ -1,10 +1,13 @@
+import re
+
+
 class HTMLNode:
     def __init__(
-        self,
-        tag: str = None,
-        value: str = None,
-        children=None,
-        props: dict = None,
+            self,
+            tag: str = None,
+            value: str = None,
+            children: list = None,
+            props: dict = None,
     ) -> None:
         self.tag = tag
         self.value = value
