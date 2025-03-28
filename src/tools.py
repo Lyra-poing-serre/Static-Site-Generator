@@ -105,10 +105,3 @@ def text_to_textnodes(text: str):
     nodes = split_nodes_image(nodes)
     nodes = split_nodes_link(nodes)
     return nodes
-
-
-def markdown_to_blocks(markdown: str):
-    if not isinstance(markdown, str):
-        raise TypeError('Invalid type.')
-    blocks = list(map(str.strip, markdown.split('\n\n')))
-    return ["\n".join(list(map(str.strip, block.split('\n')))) for block in blocks]  # REMOVE trailing whitespace
