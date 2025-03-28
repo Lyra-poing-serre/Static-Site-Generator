@@ -15,13 +15,14 @@ class BlockType(Enum):
 
 
 def markdown_to_blocks(markdown: str) -> list:
-    if not isinstance(markdown, str):
-        raise TypeError('Invalid type.')
-    blocks = list(map(str.strip, markdown.split('\n\n')))
-    return [
-        "\n".join(list(map(str.strip, block.split('\n'))))
-        for block in blocks if block.strip()  # remove "" block
-    ]  # REMOVE trailing whitespace
+    blocks = markdown.split("\n\n")
+    filtered_blocks = []
+    for block in blocks:
+        if block == "":
+            continue
+        block = block.strip()
+        filtered_blocks.append(block)
+    return filtered_blocks
 
 
 def block_to_block_type(block: str) -> BlockType:

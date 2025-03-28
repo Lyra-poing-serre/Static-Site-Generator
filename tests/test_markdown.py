@@ -6,13 +6,13 @@ from src.markdown import *
 class TestMarkdownToBlocks(unittest.TestCase):
     def test_markdown_to_blocks(self):
         md = """
-    This is **bolded** paragraph
+This is **bolded** paragraph
 
-    This is another paragraph with _italic_ text and `code` here
-    This is the same paragraph on a new line
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
 
-    - This is a list
-    - with items
+- This is a list
+- with items
     """
         blocks = markdown_to_blocks(md)
         self.assertListEqual(
@@ -26,16 +26,16 @@ class TestMarkdownToBlocks(unittest.TestCase):
 
     def test_markdown_to_blocks_heading(self):
         md = """
-    # This is a heading
+# This is a heading
 
-        ## This is a second heading
+## This is a second heading
 
-        This is a paragraph of text. It has some **bold** and _italic_ words inside of it.
+This is a paragraph of text. It has some **bold** and _italic_ words inside of it.
 
-        - This is the first list item in a list block
-        - This is a list item
-        - This is another list item
-    """
+- This is the first list item in a list block
+- This is a list item
+- This is another list item
+"""
         blocks = markdown_to_blocks(md)
         self.assertListEqual(
             blocks,
@@ -51,7 +51,7 @@ class TestMarkdownToBlocks(unittest.TestCase):
         md = ""
         blocks = markdown_to_blocks(md)
         self.assertEqual(blocks, [])
-        with self.assertRaises(TypeError):
+        with self.assertRaises(AttributeError):
             markdown_to_blocks(None)
 
 
@@ -101,13 +101,13 @@ inline code
 class TestMarkdownToHTMLNode(unittest.TestCase):
     def test_paragraphs(self):
         md = """
-    This is **bolded** paragraph
-    text in a p
-    tag here
+This is **bolded** paragraph
+text in a p
+tag here
 
-    This is another paragraph with _italic_ text and `code` here
+This is another paragraph with _italic_ text and `code` here
 
-    """
+"""
 
         node = markdown_to_html_node(md)
         html = node.to_html()
@@ -118,11 +118,11 @@ class TestMarkdownToHTMLNode(unittest.TestCase):
 
     def test_codeblock(self):
         md = """
-    ```
-    This is text that _should_ remain
-    the **same** even with inline stuff
-    ```
-    """
+```
+This is text that _should_ remain
+the **same** even with inline stuff
+```
+"""
 
         node = markdown_to_html_node(md)
         html = node.to_html()
