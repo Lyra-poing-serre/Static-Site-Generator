@@ -1,7 +1,7 @@
 import unittest
 from collections import OrderedDict
 
-from src.htmlnode import HTMLNode, LeafNode, ParentNode
+from src.htmlnode import *
 
 
 class TestHTMLNode(unittest.TestCase):
