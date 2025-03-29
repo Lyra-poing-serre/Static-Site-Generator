@@ -120,7 +120,8 @@ def static_copy():
     static_dir = root_dir / 'static'
     public_dir = root_dir / 'public'
     try:
-        shutil.rmtree(public_dir)
+        shutil.rmtree(public_dir, ignore_errors=True)
+        public_dir.mkdir()
     except PermissionError as fuck_windows:
         pass
     # dir_to_scoot = []
