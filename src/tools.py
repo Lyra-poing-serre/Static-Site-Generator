@@ -111,3 +111,22 @@ def split_nodes_image(old_nodes):
 def split_nodes_link(old_nodes):
     return split_nodes_from_type(TextType.LINK)(old_nodes)
 
+
+def static_copy():
+    from os.path import dirname, abspath
+    from pathlib import Path
+    import shutil
+    root_dir = Path(dirname(abspath(__file__))).parent
+    static_dir = root_dir / 'static'
+    public_dir = root_dir / 'public'
+    try:
+        shutil.rmtree(public_dir)
+    except PermissionError as fuck_windows:
+        pass
+    # dir_to_scoot = []
+    # for item in public_dir.iterdir():
+    #     if item.is_file():
+    #         item.()
+    #     else:
+    #         dir_to_scoot.append()
+    shutil.copytree(static_dir, public_dir, dirs_exist_ok=True)
