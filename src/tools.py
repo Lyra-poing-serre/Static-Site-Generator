@@ -36,14 +36,23 @@ def copy_static_to_public(root_dir):
     copy_source()
 
 
-def generate_page(from_path: Path, template_path: Path, dest_path: Path):
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
-    markdown = from_path.read_text()
+def copy_content_dir(from_path: Path, template_path: Path, dest_path: Path):
     template = template_path.read_text()
-    nodes = markdown_to_html_node(markdown)
-    title = extract_title(markdown)
-    new_page = template.replace("{{ Title }}", title).replace("{{ Content }}", nodes.to_html())
 
-    dest_path.parent.mkdir(parents=True, exist_ok=True)
-    dest_path.touch()
-    dest_path.write_text(new_page)
+    def generate_page(source_dir: Path, destination_dir: Path):
+        print(f"Generating page from {source_dir} to {dest_path} using {template_path}")
+        for item in source_dir.iterdir():
+            target_path = destination_dir / item.name
+            if item.is_file():
+                markdown = item.read_text()
+                nodes = markdown_to_html_node(markdown)
+                title = extract_title(markdown)
+                new_page = template.replace("{{ Title }}", title).replace("{{ Content }}", nodes.to_html())
+
+                target_path.parent.mkdir(parents=True, exist_ok=True)
+                target_path.touch()
+                target_path.write_text(new_page)
+            else:
+                generate_page(item, target_path)
+
+    generate_page(from_path, dest_path)
