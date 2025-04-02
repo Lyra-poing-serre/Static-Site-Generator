@@ -11,7 +11,7 @@ def main(base_path: str) -> None:
 
     copy_content_dir(
         from_path=root_dir / 'content',
-        dest_path=root_dir / 'public',
+        dest_path=root_dir / 'docs',
         template_path=root_dir / 'template.html',
         base_path=base_path
     )
