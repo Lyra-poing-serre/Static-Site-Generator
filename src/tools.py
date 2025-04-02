@@ -42,7 +42,7 @@ def generate_page(from_path: Path, template_path: Path, dest_path: Path):
     template = template_path.read_text()
     nodes = markdown_to_html_node(markdown)
     title = extract_title(markdown)
-    new_page = template.format(Title=title, Content=nodes.to_html())
+    new_page = template.replace("{{ Title }}", title).replace("{{ Content }}", nodes.to_html())
 
     dest_path.parent.mkdir(parents=True, exist_ok=True)
     dest_path.touch()
