@@ -44,6 +44,7 @@ def copy_content_dir(from_path: Path, template_path: Path, dest_path: Path):
         for item in source_dir.iterdir():
             target_path = destination_dir / item.name
             if item.is_file():
+                target_path = target_path.with_suffix('.html')
                 markdown = item.read_text()
                 nodes = markdown_to_html_node(markdown)
                 title = extract_title(markdown)
