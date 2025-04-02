@@ -1,1 +1,1 @@
-python3 main.py "/https://github.com/Lyra-poing-serre/Static-Site-Generator/"
+python3 main.py "/https://Lyra-poing-serre.github.io/Static-Site-Generator/"
