@@ -1,4 +1,7 @@
 import re
+import shutil
+from os.path import dirname, abspath
+from pathlib import Path
 
 from .htmlnode import LeafNode
 from .textnode import TextType, TextNode
@@ -112,22 +115,24 @@ def split_nodes_link(old_nodes):
     return split_nodes_from_type(TextType.LINK)(old_nodes)
 
 
-def static_copy():
-    from os.path import dirname, abspath
-    from pathlib import Path
-    import shutil
+def copy_static_to_public():
     root_dir = Path(dirname(abspath(__file__))).parent
-    static_dir = root_dir / 'static'
     public_dir = root_dir / 'public'
-    try:
-        shutil.rmtree(public_dir, ignore_errors=True)
-        public_dir.mkdir(exist_ok=True)
-    except PermissionError as fuck_windows:
-        pass
-    # dir_to_scoot = []
-    # for item in public_dir.iterdir():
-    #     if item.is_file():
-    #         item.()
-    #     else:
-    #         dir_to_scoot.append()
-    shutil.copytree(static_dir, public_dir, dirs_exist_ok=True)
+    static_dir = root_dir / 'static'
+    print(f'Deleting {public_dir}')
+    shutil.rmtree(public_dir, ignore_errors=True)
+
+    def copy_source(source_dir=static_dir, destination=public_dir):
+        if isinstance(source_dir, str):
+            source_dir = Path(source_dir).absolute()
+        destination.mkdir(exist_ok=True)
+        print(f'Copying {source_dir} to {destination}')
+        for item in source_dir.iterdir():
+            target_path = destination / item.name
+            if item.is_file():
+                shutil.copy(item, target_path)
+            else:
+                copy_source(item, target_path)
+
+    print(f'Copying statics files into public dir.')
+    copy_source()
