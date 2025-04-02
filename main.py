@@ -10,7 +10,7 @@ def main() -> None:
     generate_page(
         root_dir / 'content' / 'index.md',
         root_dir / 'template.html',
-        root_dir / 'public' / 'template.html',
+        root_dir / 'public' / 'index.html',
     )
 
 
