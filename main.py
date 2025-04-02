@@ -2,12 +2,12 @@ import sys
 from pathlib import Path
 from os.path import dirname, abspath
 
-from src.tools import copy_static_to_public, copy_content_dir
+from src.tools import copy_static_to_target, copy_content_dir
 
 
 def main(base_path: str) -> None:
     root_dir = Path(dirname(abspath(__file__)))
-    copy_static_to_public(root_dir)
+    copy_static_to_target(root_dir, 'docs')
 
     copy_content_dir(
         from_path=root_dir / 'content',

@@ -14,13 +14,13 @@ def extract_title(markdown):
         raise Exception('No title found')
 
 
-def copy_static_to_public(root_dir):
-    public_dir = root_dir / 'public'
+def copy_static_to_target(root_dir: Path, target: str):
+    target_dir = root_dir / target
     static_dir = root_dir / 'static'
-    print(f'Deleting {public_dir}')
-    shutil.rmtree(public_dir, ignore_errors=True)
+    print(f'Deleting {target_dir}')
+    shutil.rmtree(target_dir, ignore_errors=True)
 
-    def copy_source(source_dir=static_dir, destination=public_dir):
+    def copy_source(source_dir=static_dir, destination=target_dir):
         if isinstance(source_dir, str):
             source_dir = Path(source_dir).absolute()
         destination.mkdir(exist_ok=True)
