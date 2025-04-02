@@ -14,9 +14,9 @@ def main() -> None:
         root_dir / 'public' / 'index.html',
     )
     generate_page(
-        root_dir / 'content' / 'blog' / 'contact' / 'index.md',
+        root_dir / 'content' / 'contact' / 'index.md',
         root_dir / 'template.html',
-        root_dir / 'public''content' / 'blog' / 'contact' / 'index.html',
+        root_dir / 'public''content' / 'contact' / 'index.html',
     )
     generate_page(
         root_dir / 'content' / 'blog' / 'tom' / 'index.md',
