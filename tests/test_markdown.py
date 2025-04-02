@@ -1,6 +1,7 @@
 import unittest
 
 from src.markdown import *
+from src.tools import *
 
 
 class TestMarkdownToBlocks(unittest.TestCase):
@@ -160,3 +161,5 @@ def sample_code():
             html,
             "<div><h1>Heading 1</h1><h2>Heading 2</h2><p>This is a paragraph with <b>bold</b> and <i>italic</i> text.</p><blockquote>This is a blockquote with <code>code</code> in it.</blockquote><ul><li>List item 1</li><li>List item 2</li><li>List item 3</li></ul><ol><li>Ordered item 1</li><li>Ordered item 2</li><li>Ordered item 3</li></ol><pre><code>def sample_code():\n    return \"This is a code block\"\n</code></pre></div>"
         )
+
+

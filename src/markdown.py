@@ -2,7 +2,7 @@ import re
 from enum import Enum
 
 from .htmlnode import ParentNode, LeafNode, HTMLNode
-from .tools import text_to_textnodes, text_node_to_html_node
+from .textnode import text_to_textnodes, text_node_to_html_node
 
 
 class BlockType(Enum):
@@ -87,5 +87,3 @@ def markdown_to_html_node(markdown: str) -> ParentNode:
 def children_to_html_node(markdown_children: str) -> list:
     nodes = text_to_textnodes(markdown_children)
     return list(map(text_node_to_html_node, nodes))
-
-

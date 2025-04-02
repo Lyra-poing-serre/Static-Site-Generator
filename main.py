@@ -1,10 +1,17 @@
-from src.textnode import TextNode, TextType
-from src.tools import copy_static_to_public
+from pathlib import Path
+from os.path import dirname, abspath
+
+from src.tools import copy_static_to_public, generate_page
 
 
 def main() -> None:
-    print(TextNode("Greedy goblin", TextType.LINK, "https://www.rexma.fr"))
-    copy_static_to_public()
+    root_dir = Path(dirname(abspath(__file__)))
+    copy_static_to_public(root_dir)
+    generate_page(
+        root_dir / 'content' / 'index.md',
+        root_dir / 'template.html',
+        root_dir / 'public' / 'template.html',
+    )
 
 
 if __name__ == "__main__":
